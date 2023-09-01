@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/taskManager")
+  .connect("mongodb+srv://sivanandus2003:Nandu%402003@cluster0.z3yl9ox.mongodb.net/taskManager?retryWrites=true&w=majority")
   .then(() => {
     console.log("Mongoose Connected");
   })
