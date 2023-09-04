@@ -23,40 +23,41 @@ mongoose
   });
 
 app.post("/register", async (req, res) => {
+  console.log("Register");
   const pass = await bcrypt.hash(req.body.password, 12);
   const data = {
     name: req.body.name,
     email: req.body.email,
     password: pass,
   };
+  console.log(data);
   const result = new User(data);
   await result
     .save()
     .then((item) => {
-      res.json({ result: "success" });
+      res.send({ result: "success" });
     })
     .catch((err) => {
       console.log("Error : " + err.message);
-      res.send("unable to save");
+      res.send({ result: "error" });
     });
-  res.send(req.body);
 });
 
 app.post("/login", async (req, res) => {
   console.log("from /login");
   console.log(req.body);
-  const password = await User.find({ email: req.body.email });
-  if (password.length === 0) {
+  const user = await User.find({ email: req.body.email });
+  if (user.length === 0) {
     res.send({
       result: "error",
     });
   }
-  console.log(password);
-  const isMatch = await bcrypt.compare(req.body.password, password[0].password);
+  console.log(user);
+  const isMatch = await bcrypt.compare(req.body.password, user[0].password);
   console.log(isMatch);
   if (isMatch) {
-    console.log({ result: "success", name: password[0].email });
-    res.json({ result: "success", name: password[0].email });
+    console.log({ result: "success"});
+    res.send({ result: "success"});
   } else {
     res.send({
       result: "error",
@@ -74,8 +75,8 @@ app.get("/data/:id", async (req, res) => {
 });
 
 app.post("/data", async (req, res) => {
+  console.log("POST /data", req.body);
   var task = new To_Do(req.body);
-  console.log(task);
   await task
     .save()
     .then((item) => {
